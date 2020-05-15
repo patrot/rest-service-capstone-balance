@@ -1,7 +1,7 @@
 package com.capstone.restservice.unit.service;
 
 import com.capstone.restservice.domain.ProductBalance;
-import com.capstone.restservice.service.ProductBalanceService;
+import com.capstone.restservice.repository.ProductBalanceDto;
 import com.capstone.restservice.service.ProductBalanceServiceImpl;
 import org.junit.jupiter.api.Test;
 
@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ProductBalanceServiceTests {
@@ -18,13 +19,25 @@ public class ProductBalanceServiceTests {
 
         // Arrange
 
-        List<ProductBalance> expectedProductBalances = new ArrayList<>();
-        expectedProductBalances.add(new ProductBalance(1L, 1L, 1L, 10));
-        expectedProductBalances.add(new ProductBalance(2L, 1L, 2L, 10));
-        expectedProductBalances.add(new ProductBalance(3L, 2L, 1L, 10));
-        expectedProductBalances.add(new ProductBalance(4L, 2L, 2L, 10));
+        List<ProductBalanceDto> productBalanceDtos = new ArrayList<>();
+        productBalanceDtos.add(new ProductBalanceDto(1L, 1L, 10));
+        productBalanceDtos.add(new ProductBalanceDto(1L, 2L, 10));
+        productBalanceDtos.add(new ProductBalanceDto(2L, 1L, 10));
+        productBalanceDtos.add(new ProductBalanceDto(2L, 2L, 10));
 
-        ProductBalanceService productBalanceService = new ProductBalanceServiceImpl();
+        MockProductBalanceRepository mockProductBalanceRepository = new MockProductBalanceRepository(productBalanceDtos);
+        ProductBalanceServiceImpl productBalanceService = new ProductBalanceServiceImpl();
+        productBalanceService.setRepository(mockProductBalanceRepository);
+
+        List<ProductBalance> expectedProductBalances = new ArrayList<>();
+        for (ProductBalanceDto productBalanceDto:productBalanceDtos) {
+            expectedProductBalances.add(new ProductBalance(
+                    productBalanceDto.getId(),
+                    productBalanceDto.getProductId(),
+                    productBalanceDto.getLocationId(),
+                    productBalanceDto.getQuantity()));
+        }
+
 
         // Act
 
@@ -33,5 +46,7 @@ public class ProductBalanceServiceTests {
         // Assert
 
         assertTrue(Arrays.deepEquals(expectedProductBalances.toArray(), actualProductBalances.toArray()));
+
+        assertEquals(1, mockProductBalanceRepository.getFindAllInvocationCount());
     }
 }
