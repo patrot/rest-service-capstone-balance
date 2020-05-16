@@ -24,6 +24,8 @@ dependencies {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 	}
 	implementation 'junit:junit:4.12'
+	testCompile group: 'org.junit.platform', name: 'junit-platform-runner'
+	testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test'
 }
 
 test {

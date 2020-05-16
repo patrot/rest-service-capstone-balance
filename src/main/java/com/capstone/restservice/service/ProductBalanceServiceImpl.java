@@ -28,8 +28,4 @@ public class ProductBalanceServiceImpl implements ProductBalanceService {
 
         return productBalances;
     }
-
-    public void setRepository(ProductBalanceRepository productBalanceRepository) {
-        this.productBalanceRepository = productBalanceRepository;
-    }
 }
