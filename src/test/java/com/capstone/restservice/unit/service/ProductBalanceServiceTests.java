@@ -20,6 +20,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 @RunWith(SpringRunner.class)
 public class ProductBalanceServiceTests {
@@ -72,6 +74,8 @@ public class ProductBalanceServiceTests {
         List<ProductBalance> actualProductBalances = productBalanceService.getAll();
 
         // Assert
+
+        verify(productBalanceRepository, times(1)).findAll();
 
         assertTrue(Arrays.deepEquals(expectedProductBalances.toArray(), actualProductBalances.toArray()));
     }
