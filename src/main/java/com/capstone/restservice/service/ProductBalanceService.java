@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface ProductBalanceService {
     List<ProductBalance> getAll();
+
+    ProductBalance getBalance(Long productId, Long locationId);
 }
