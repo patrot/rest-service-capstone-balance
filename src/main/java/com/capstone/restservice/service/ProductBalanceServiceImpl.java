@@ -28,4 +28,23 @@ public class ProductBalanceServiceImpl implements ProductBalanceService {
 
         return productBalances;
     }
+
+    @Override
+    public ProductBalance getBalance(Long productId, Long locationId) {
+        List<ProductBalanceDto> productBalanceDtos = productBalanceRepository.findAll();
+
+        List<ProductBalance> productBalances = new ArrayList<>();
+
+        for (ProductBalanceDto productBalanceDto:productBalanceDtos) {
+            if (productBalanceDto.getProductId() == productId && productBalanceDto.getLocationId() == locationId) {
+                return new ProductBalance(
+                        productBalanceDto.getId(),
+                        productBalanceDto.getProductId(),
+                        productBalanceDto.getLocationId(),
+                        productBalanceDto.getQuantity());
+            }
+        }
+
+        return null;
+    }
 }

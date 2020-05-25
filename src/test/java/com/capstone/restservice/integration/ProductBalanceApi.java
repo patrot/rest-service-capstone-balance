@@ -35,6 +35,7 @@ public class ProductBalanceApi {
     private TestRestTemplate restTemplate;
 
     private final String productBalancesPath = "/productbalances";
+    private final String balancePath = "/balance";
 
     @Test
     @DirtiesContext
@@ -74,5 +75,31 @@ public class ProductBalanceApi {
         ObjectMapper objectMapper = new ObjectMapper();
         List<ProductBalance> actualProductBalances = objectMapper.readValue(response, new TypeReference<>() {});
         assertTrue(Arrays.deepEquals(expectedProductBalances.toArray(), actualProductBalances.toArray()));
+    }
+
+    @Test
+    @DirtiesContext
+    public void balancePathReturnBalanceForProductAndLocation() throws IOException {
+
+        // Arrange
+
+        List<ProductBalance> expectedProductBalances = new ArrayList<>();
+        expectedProductBalances.add(new ProductBalance(1L, 1L, 1L, 10));
+        expectedProductBalances.add(new ProductBalance(2L, 1L, 2L, 10));
+        expectedProductBalances.add(new ProductBalance(3L, 2L, 1L, 10));
+        expectedProductBalances.add(new ProductBalance(4L, 2L, 2L, 10));
+
+        HttpUriRequest request = new HttpGet("http://localhost:" + port + balancePath + "?productId=1&locationId=1");
+
+        // Act
+
+        HttpResponse httpResponse = HttpClientBuilder.create().build().execute(request);
+
+        // Assert
+
+        String response = EntityUtils.toString(httpResponse.getEntity());
+        ObjectMapper objectMapper = new ObjectMapper();
+        ProductBalance actualProductBalance = objectMapper.readValue(response, new TypeReference<>() {});
+        assertTrue(expectedProductBalances.get(0).equals(actualProductBalance));
     }
 }
